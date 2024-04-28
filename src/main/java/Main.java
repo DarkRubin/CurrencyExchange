@@ -13,11 +13,22 @@ public class Main {
             for (Currency currency : list) {
                 System.out.println(currency);
             }
-
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Currency addedCurrency = null;
+        try {
+            addedCurrency = table.addCurrency(new Currency(null, "EUR", "Euro", "€"));
+        } catch (SQLException e) {
+            System.out.println(addedCurrency);
+        }
+        try {
+            Currency currency = table.readCurrency(new Currency(null, "USD", null, null));
+            System.out.println(currency);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        System.out.println("ddddd");
+
     }
 }

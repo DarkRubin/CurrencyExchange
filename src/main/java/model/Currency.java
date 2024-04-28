@@ -1,16 +1,20 @@
 package model;
 
 public class Currency {
-    private long id;
+    private Integer id;
     private String code;
     private String name;
     private String sign;
 
-    public Currency(long id, String code, String name, String sign) {
+    public Currency(Integer id, String code, String name, String sign) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.sign = sign;
+    }
+
+    public Currency(Integer id) {
+        this.id = id;
     }
 
     @Override
@@ -23,11 +27,11 @@ public class Currency {
                 '}';
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -5,6 +5,12 @@ public class Exchange {
     private double amount;
     private double convertedAmount;
 
+    public Exchange(ExchangeRate exchangeRate, double amount, double convertedAmount) {
+        this.exchangeRate = exchangeRate;
+        this.amount = amount;
+        this.convertedAmount = convertedAmount;
+    }
+
     public ExchangeRate getExchangeRate() {
         return exchangeRate;
     }
