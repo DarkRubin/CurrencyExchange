@@ -21,17 +21,6 @@ public class Exchange {
                 '}';
     }
 
-    public ExchangeRateDTO getExchangeRate() {
-        return exchangeRate;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getConvertedAmount() {
-        return convertedAmount;
-    }
 
     public double getRate() {
         return exchangeRate.getRate();

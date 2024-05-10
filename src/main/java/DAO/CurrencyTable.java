@@ -6,7 +6,10 @@ import exceptions.Service.CurrencyNotFoundException;
 import exceptions.Service.DbDontWorkException;
 import model.Currency;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,16 +50,6 @@ public class CurrencyTable implements DAO<Currency> {
             return find(currency);
         } catch (SQLException e) {
             throw new DbDontWorkException();
-        }
-    }
-
-
-    public boolean dbHaveObject(Currency currency) throws DbDontWorkException {
-        try {
-            find(currency);
-            return true;
-        } catch (DbObjectNotFoundException e) {
-            return false;
         }
     }
 

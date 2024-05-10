@@ -52,15 +52,6 @@ public class ExchangeTable implements DAO<ExchangeRate> {
         }
     }
 
-    public boolean dbHaveObject(ExchangeRate exchangeRate) throws DbDontWorkException {
-        try {
-            ExchangeRate rate = find(exchangeRate);
-            return rate.getId() != 0;
-        } catch (DbObjectNotFoundException e) {
-            return false;
-        }
-    }
-
     @Override
     public List<ExchangeRate> findAll() throws DbDontWorkException {
         List<ExchangeRate> exchanges = new ArrayList<>();

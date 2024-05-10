@@ -4,7 +4,7 @@ public class ExchangeRate extends Model {
     private Long id;
     private final Long base;
     private final Long target;
-    private Double rate;
+    private final Double rate;
 
     public ExchangeRate(Long id, Long base, Long target, Double rate) {
         this.id = id;
@@ -13,14 +13,6 @@ public class ExchangeRate extends Model {
         this.rate = rate;
     }
 
-    public ExchangeRate(Long base, Long target) {
-        this.base = base;
-        this.target = target;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
