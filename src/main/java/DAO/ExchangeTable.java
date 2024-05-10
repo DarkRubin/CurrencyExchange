@@ -1,51 +1,115 @@
 package DAO;
 
-import model.Currency;
-import model.Exchange;
+import exceptions.DB.DbObjectNotFoundException;
+import exceptions.Service.DbDontWorkException;
 import model.ExchangeRate;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ExchangeTable {
+public class ExchangeTable implements DAO<ExchangeRate> {
 
     private final DBConnector connector = new DBConnector();
     private Connection connection;
 
-    public ArrayList<ExchangeRate> readAll() throws SQLException {
-        connection = connector.getConnection();
-        ArrayList<ExchangeRate> exchanges = new ArrayList<>();
-        ResultSet allExchangeRates = connector.createResultSet(connection,
-                "SELECT * FROM ExchangeRates;");
-        while (allExchangeRates.next()) {
-            exchanges.add(resultSetToExchangeRate(allExchangeRates));
+    @Override
+    public ExchangeRate save(ExchangeRate exchangeRate) throws DbDontWorkException {
+        try {
+            connection = connector.getConnection();
+            PreparedStatement preparedStatement = connection.
+                prepareStatement("INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate) VALUES (?, ?, ?);");
+            preparedStatement.setLong(1, exchangeRate.getBase());
+            preparedStatement.setLong(2, exchangeRate.getTarget());
+            preparedStatement.setDouble(3, exchangeRate.getRate());
+            preparedStatement.execute();
+            connection.close();
+            exchangeRate = find(exchangeRate);
+            return exchangeRate;
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
         }
-        connection.close();
+
+    }
+
+    @Override
+    public ExchangeRate update(ExchangeRate exchangeRate) throws DbDontWorkException {
+        try {
+            connection = connector.getConnection();
+            PreparedStatement preparedStatement = connection.
+                    prepareStatement("UPDATE ExchangeRates SET Rate = ? WHERE BaseCurrencyId = ? AND TargetCurrencyId = ?");
+            preparedStatement.setDouble(1, exchangeRate.getRate());
+            preparedStatement.setLong(2, exchangeRate.getBase());
+            preparedStatement.setDouble(3, exchangeRate.getTarget());
+            preparedStatement.execute();
+            connection.close();
+            return find(exchangeRate);
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
+    }
+
+    public boolean dbHaveObject(ExchangeRate exchangeRate) throws DbDontWorkException {
+        try {
+            ExchangeRate rate = find(exchangeRate);
+            return rate.getId() != 0;
+        } catch (DbObjectNotFoundException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public List<ExchangeRate> findAll() throws DbDontWorkException {
+        List<ExchangeRate> exchanges = new ArrayList<>();
+        try {
+            connection = connector.getConnection();
+            ResultSet allExchangeRates = connection.createStatement().executeQuery("SELECT * FROM ExchangeRates;");
+            while (allExchangeRates.next()) {
+                exchanges.add(resultSetToExchangeRate(allExchangeRates));
+            }
+            connection.close();
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
         return exchanges;
     }
 
-
-
-    public ExchangeRate read(ExchangeRate exchangeRate) throws SQLException {
-        connection = connector.getConnection();
-        ResultSet result = connector.createResultSet(connection,
-                "SELECT * FROM Currencies WHERE Code = '" + exchangeRate.getBase() + "';");
-        connection.close();
-        return resultSetToExchangeRate(result);
+    @Override
+    public ExchangeRate find(ExchangeRate exchangeRate) throws DbObjectNotFoundException, DbDontWorkException {
+        try {
+            connection = connector.getConnection();
+            PreparedStatement statement = connection.
+                prepareStatement("SELECT * FROM ExchangeRates WHERE BaseCurrencyId = ? AND TargetCurrencyId = ?");
+            statement.setLong(1, exchangeRate.getBase());
+            statement.setLong(2, exchangeRate.getTarget());
+            ResultSet resultSet = statement.executeQuery();
+            ExchangeRate result = resultSetToExchangeRate(resultSet);
+            connection.close();
+            return result;
+        } catch (DbObjectNotFoundException e) {
+            throw new DbObjectNotFoundException(e);
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
     }
 
-    private ExchangeRate resultSetToExchangeRate(ResultSet result) throws SQLException {
-        long id = result.getLong("ID");
-        int baseCurrencyId = result.getInt("BaseCurrencyId");
-        int targetCurrencyId = result.getInt("TargetCurrencyId");
-        double rate = result.getDouble("Rate");
-        CurrencyTable table = new CurrencyTable();
-        Currency baseCurrency = table.readCurrency(new Currency(baseCurrencyId));
-        Currency targetCurrency = table.readCurrency(new Currency(targetCurrencyId));
-        return new ExchangeRate(id, baseCurrency, targetCurrency, rate);
+    private ExchangeRate resultSetToExchangeRate(ResultSet result) throws DbObjectNotFoundException, DbDontWorkException {
+        try {
+            long id = result.getInt("ID");
+            if (id == 0) {
+                throw new DbObjectNotFoundException(new SQLException());
+            }
+            long baseCurrencyId = result.getInt("BaseCurrencyId");
+            long targetCurrencyId = result.getInt("TargetCurrencyId");
+            double rate = result.getDouble("Rate");
+            return new ExchangeRate(id, baseCurrencyId, targetCurrencyId, rate);
+        } catch (DbObjectNotFoundException e) {
+          throw new DbObjectNotFoundException(e);
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
     }
-
-
 }

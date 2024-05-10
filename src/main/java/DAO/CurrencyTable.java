@@ -1,63 +1,122 @@
 package DAO;
 
+
+import exceptions.DB.DbObjectNotFoundException;
+import exceptions.Service.CurrencyNotFoundException;
+import exceptions.Service.DbDontWorkException;
 import model.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class CurrencyTable {
+
+public class CurrencyTable implements DAO<Currency> {
 
     private final DBConnector connector = new DBConnector();
     private Connection connection;
 
-    public Currency addCurrency(Currency currency) throws SQLException {
-        connection = connector.getConnection();
-        String code = currency.getCode();
-        String fullName = currency.getName();
-        String sign = currency.getSign();
-        PreparedStatement statement = connector.createPreparedStatement(connection,
-                "INSERT INTO Currencies (Code, FullName, Sign) VALUES (?, ?, ?);");
-        statement.setString(1, code);
-        statement.setString(2, fullName);
-        statement.setString(3, sign);
-        statement.execute();
-        connection.close();
-        return readCurrency(currency);
+    @Override
+    public Currency save(Currency currency) throws DbDontWorkException {
+        try {
+            connection = connector.getConnection();
+            PreparedStatement statement = connection.
+                    prepareStatement("INSERT INTO Currencies (Code, FullName, Sign) VALUES (?, ?, ?);");
+            statement.setString(1, currency.getCode());
+            statement.setString(2, currency.getName());
+            statement.setString(3, currency.getSign());
+            statement.execute();
+            connection.close();
+            return find(currency);
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
     }
 
-    public Currency readCurrency(Currency currency) throws SQLException {
-        connection = connector.getConnection();
-        ResultSet result;
-        if (currency.getId() == null) {
-             result = connector.createResultSet(connection,
-                    "SELECT * FROM Currencies WHERE Code = '" + currency.getCode() + "';");
-        } else {
-            result = connector.createResultSet(connection,
-                    "SELECT * FROM Currencies WHERE ID = '" + currency.getId() + "';");
+    @Override
+    public Currency update(Currency currency) throws DbDontWorkException{
+        try {
+            connection = connector.getConnection();
+            PreparedStatement statement = connection.
+                    prepareStatement("UPDATE Currencies SET FullName = ?, Sign = ? WHERE Code = ?;");
+            statement.setString(1, currency.getName());
+            statement.setString(2, currency.getSign());
+            statement.setString(3, currency.getCode());
+            statement.execute();
+            connection.close();
+            return find(currency);
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
         }
-        connection.close();
-        return resultSetToCurrency(result);
     }
 
-    public ArrayList<Currency> readAllCurrencies() throws SQLException {
-        connection = connector.getConnection();
-        ArrayList<Currency> currencies = new ArrayList<>();
-        ResultSet allCurrencies = connector.createResultSet(connection,
-                "SELECT * FROM Currencies;");
-        while (allCurrencies.next()) {
-            currencies.add(resultSetToCurrency(allCurrencies));
+
+    public boolean dbHaveObject(Currency currency) throws DbDontWorkException {
+        try {
+            find(currency);
+            return true;
+        } catch (DbObjectNotFoundException e) {
+            return false;
         }
-        connection.close();
-        return currencies;
+    }
+
+    @Override
+    public Currency find(Currency currency) throws DbDontWorkException, DbObjectNotFoundException {
+        try (var connection = connector.getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ? ");
+            statement.setString(1, currency.getCode());
+            ResultSet resultSet = statement.executeQuery();
+            Currency result = resultSetToCurrency(resultSet);
+            connection.close();
+            return result;
+        } catch (DbObjectNotFoundException e) {
+            throw new DbObjectNotFoundException(e);
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
+    }
+
+    public Currency findById(long id) throws DbDontWorkException, CurrencyNotFoundException {
+        try {
+            connection = connector.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Currencies WHERE ID = ?");
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            Currency result = resultSetToCurrency(resultSet);
+            connection.close();
+            return result;
+        } catch (DbObjectNotFoundException e) {
+            throw new CurrencyNotFoundException();
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
+    }
+
+    @Override
+    public List<Currency> findAll() throws DbDontWorkException {
+        try {
+            connection = connector.getConnection();
+            ResultSet allCurrencies = connection.createStatement().executeQuery("SELECT * FROM Currencies;");
+            List<Currency> currencies = new ArrayList<>();
+            while (allCurrencies.next()) {
+                currencies.add(resultSetToCurrency(allCurrencies));
+            }
+            connection.close();
+            return currencies;
+        } catch (SQLException e) {
+            throw new DbDontWorkException();
+        }
     }
 
     private Currency resultSetToCurrency(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("ID");
+        long id = resultSet.getInt("ID");
+        if (id == 0) {
+            throw new DbObjectNotFoundException(new SQLException());
+        }
         String code = resultSet.getString("Code");
         String fullName = resultSet.getString("FullName");
         String sign = resultSet.getString("Sign");
         return new Currency(id, code, fullName, sign);
     }
-
-
 }

@@ -1,15 +1,19 @@
 package DAO;
 
-import java.sql.Connection;
 
-public interface DAO {
-    DBConnector connector = new DBConnector();
-    Connection connection = null;
+import exceptions.DB.DbObjectNotFoundException;
+import exceptions.Service.DbDontWorkException;
 
+import java.util.List;
 
-    Class<?> readAll();
+public interface DAO<T> {
 
-    Class<?> read();
+    List<T> findAll() throws DbDontWorkException;
 
+    T find(T t) throws DbDontWorkException, DbObjectNotFoundException;
+
+    T save(T t) throws DbDontWorkException;
+
+    T update(T t) throws DbDontWorkException;
 
 }

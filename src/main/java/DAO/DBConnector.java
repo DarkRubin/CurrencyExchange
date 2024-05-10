@@ -1,22 +1,32 @@
 package DAO;
 
 
-import java.sql.*;
+import exceptions.DB.DbConnectException;
 
-public class DBConnector {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-    private static final String URL = "jdbc:sqlite:exchangeDB.sqlite";
+public final class DBConnector {
 
-    Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+    private static final String URL = "jdbc:sqlite:E:/DEV/Projects/CurrencyExchange/src/main/resources/exchangeDB.sqlite";
+
+    static {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    PreparedStatement createPreparedStatement(Connection connection, String sql) throws SQLException {
-        return connection.prepareStatement(sql);
+    Connection getConnection() throws DbConnectException {
+        try {
+            return DriverManager.getConnection(URL);
+        } catch (SQLException e) {
+            throw new DbConnectException(e);
+        }
     }
 
-    ResultSet createResultSet(Connection connection, String sql) throws SQLException {
-        return connection.createStatement().executeQuery(sql);
-    }
+
 
 }

@@ -1,4 +1,4 @@
 package model;
 
-public class Model {
+public abstract class Model {
 }

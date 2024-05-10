@@ -7,22 +7,13 @@
         <welcome-file>MainPage.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
-        <servlet-name>StartServlet</servlet-name>
-        <servlet-class>servlets.StartServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>StartServlet</servlet-name>
-        <url-pattern>/start</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>MainPage</servlet-name>
         <jsp-file>/MainPage.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainPage</servlet-name>
-        <url-pattern>/main</url-pattern>
+        <url-pattern>/main/$</url-pattern>
     </servlet-mapping>
-
 
 </web-app>
 

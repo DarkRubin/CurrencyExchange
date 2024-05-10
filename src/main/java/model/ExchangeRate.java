@@ -1,47 +1,51 @@
 package model;
 
-public class ExchangeRate {
-    private long id;
-    private Currency base;
-    private Currency target;
-    private double rate;
+public class ExchangeRate extends Model {
+    private Long id;
+    private final Long base;
+    private final Long target;
+    private Double rate;
 
-    public ExchangeRate(long id, Currency base, Currency target, double rate) {
+    public ExchangeRate(Long id, Long base, Long target, Double rate) {
         this.id = id;
         this.base = base;
         this.target = target;
         this.rate = rate;
     }
 
-    public long getId() {
+    public ExchangeRate(Long base, Long target) {
+        this.base = base;
+        this.target = target;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "ExchangeRate{" +
+                "id=" + id +
+                ", base=" + base +
+                ", target=" + target +
+                ", rate=" + rate +
+                '}';
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Currency getBase() {
+    public Long getBase() {
         return base;
     }
 
-    public void setBase(Currency base) {
-        this.base = base;
-    }
-
-    public Currency getTarget() {
+    public Long getTarget() {
         return target;
     }
 
-    public void setTarget(Currency target) {
-        this.target = target;
-    }
-
-    public double getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
 }
