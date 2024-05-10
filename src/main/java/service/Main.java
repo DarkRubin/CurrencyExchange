@@ -2,17 +2,16 @@ package service;
 
 import DAO.CurrencyTable;
 import DTO.ExchangeRateDTO;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
-import exceptions.Service.ExchangeRateNotFoundException;
+import exceptions.Service.*;
 import model.Currency;
 
 import java.util.List;
 
-import static java.lang.System.*;
+import static java.lang.System.out;
 
 public class Main {
-    public static void main(String[] args) throws DbDontWorkException, CurrencyNotFoundException, ExchangeRateNotFoundException {
+    public static void main(String[] args)
+            throws DbDontWorkException, CurrencyNotFoundException, ExchangeRateNotFoundException{
         exchangeTableTest();
         currencyTableTest();
     }
@@ -23,7 +22,12 @@ public class Main {
         for (ExchangeRateDTO exchangeRate  : list) {
             out.println(exchangeRate);
         }
-        ExchangeRateDTO addedExchange = service.saveToTable(new ExchangeRateDTO(new Currency("AUD"), new Currency("USD"), 0.66));
+        ExchangeRateDTO addedExchange;
+        try {
+            addedExchange = service.saveToTable(new ExchangeRateDTO(new Currency("AUD"), new Currency("USD"), 0.66));
+        } catch (ExchangeRateAlreadyExistException e) {
+            addedExchange = e.savedExchangeRate;
+        }
         out.println(addedExchange);
         ExchangeRateDTO exchangeRate = service.findInTable
                 (new ExchangeRateDTO(new Currency("AUD"), new Currency("USD"), null));
@@ -38,7 +42,11 @@ public class Main {
             out.println(currency);
         }
         Currency addedCurrency;
-        addedCurrency = service.saveToTable(new Currency("EUR", "Euro", "€"));
+        try {
+            addedCurrency = service.saveToTable(new Currency("EUR", "Euro", "€"));
+        } catch (CurrencyAlreadyExistException e) {
+            addedCurrency = e.savedCurrency;
+        }
         out.println(addedCurrency);
         Currency currency = service.findInTable("USD");
         out.println(currency);

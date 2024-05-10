@@ -3,9 +3,11 @@ package service;
 import DAO.CurrencyTable;
 import DAO.ExchangeTable;
 import DTO.ExchangeRateDTO;
+import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
 import exceptions.Service.CurrencyNotFoundException;
 import exceptions.Service.DbDontWorkException;
+import exceptions.Service.ExchangeRateAlreadyExistException;
 import exceptions.Service.ExchangeRateNotFoundException;
 import model.Currency;
 import model.ExchangeRate;
@@ -18,12 +20,15 @@ public class ExchangeRatesService {
     private final ExchangeTable table = new ExchangeTable();
     private final CurrencyTable converter = new CurrencyTable();
 
-    public ExchangeRateDTO saveToTable(ExchangeRateDTO dto) throws CurrencyNotFoundException, DbDontWorkException {
+    public ExchangeRateDTO saveToTable(ExchangeRateDTO dto)
+            throws CurrencyNotFoundException, DbDontWorkException, ExchangeRateNotFoundException, ExchangeRateAlreadyExistException {
         try {
             ExchangeRate exchangeRate = convertDTOtoModel(dto);
             return convertModelToDTO(table.save(exchangeRate));
         }catch (DbObjectNotFoundException e) {
             throw new CurrencyNotFoundException();
+        } catch (DbObjectAlreadyAddedException e) {
+            throw new ExchangeRateAlreadyExistException(findInTable(dto));
         }
     }
 

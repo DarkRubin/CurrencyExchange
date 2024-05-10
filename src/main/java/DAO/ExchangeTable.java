@@ -1,5 +1,6 @@
 package DAO;
 
+import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
 import exceptions.Service.DbDontWorkException;
 import model.ExchangeRate;
@@ -17,7 +18,7 @@ public class ExchangeTable implements DAO<ExchangeRate> {
     private Connection connection;
 
     @Override
-    public ExchangeRate save(ExchangeRate exchangeRate) throws DbDontWorkException {
+    public ExchangeRate save(ExchangeRate exchangeRate) throws DbDontWorkException, DbObjectAlreadyAddedException {
         try {
             connection = connector.getConnection();
             PreparedStatement preparedStatement = connection.
@@ -30,6 +31,9 @@ public class ExchangeTable implements DAO<ExchangeRate> {
             exchangeRate = find(exchangeRate);
             return exchangeRate;
         } catch (SQLException e) {
+            if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                throw new DbObjectAlreadyAddedException(e);
+            }
             throw new DbDontWorkException();
         }
 

@@ -1,6 +1,8 @@
 package servlets;
 
 import DAO.CurrencyTable;
+import exceptions.Service.CurrencyAlreadyExistException;
+import exceptions.Service.CurrencyNotFoundException;
 import exceptions.Service.DbDontWorkException;
 import exceptions.Service.NeedFieldEmptyException;
 import jakarta.servlet.annotation.WebServlet;
@@ -37,9 +39,12 @@ public class CurrenciesServlet extends StartServlet {
             Currency currency = new Currency(fields.get(1), fields.get(0), fields.get(2));
             response.setStatus(201);
             printResponse(gson.toJson(service.saveToTable(currency)), response);
-        } catch (NeedFieldEmptyException | DbDontWorkException e) {
+        } catch (NeedFieldEmptyException | DbDontWorkException | CurrencyNotFoundException e) {
             response.setStatus(e.getHttpCode());
             printResponse(e.getMessage(), response);
+        } catch (CurrencyAlreadyExistException e) {
+            response.setStatus(e.getHttpCode());
+            printResponse(gson.toJson(e.savedCurrency), response);
         }
     }
 

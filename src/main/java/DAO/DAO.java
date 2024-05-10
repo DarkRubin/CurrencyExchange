@@ -1,6 +1,7 @@
 package DAO;
 
 
+import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
 import exceptions.Service.DbDontWorkException;
 
@@ -12,7 +13,7 @@ public interface DAO<T> {
 
     T find(T t) throws DbDontWorkException, DbObjectNotFoundException;
 
-    T save(T t) throws DbDontWorkException;
+    T save(T t) throws DbDontWorkException, DbObjectAlreadyAddedException;
 
     T update(T t) throws DbDontWorkException;
 

@@ -1,6 +1,7 @@
 package DAO;
 
 
+import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
 import exceptions.Service.CurrencyNotFoundException;
 import exceptions.Service.DbDontWorkException;
@@ -20,7 +21,7 @@ public class CurrencyTable implements DAO<Currency> {
     private Connection connection;
 
     @Override
-    public Currency save(Currency currency) throws DbDontWorkException {
+    public Currency save(Currency currency) throws DbDontWorkException, DbObjectAlreadyAddedException {
         try {
             connection = connector.getConnection();
             PreparedStatement statement = connection.
@@ -32,6 +33,9 @@ public class CurrencyTable implements DAO<Currency> {
             connection.close();
             return find(currency);
         } catch (SQLException e) {
+            if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
+                throw new DbObjectAlreadyAddedException(e);
+            }
             throw new DbDontWorkException();
         }
     }

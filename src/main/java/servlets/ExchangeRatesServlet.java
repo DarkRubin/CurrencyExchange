@@ -1,10 +1,7 @@
 package servlets;
 
 import DTO.ExchangeRateDTO;
-import exceptions.Service.CodePairInvalidException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
-import exceptions.Service.ExchangeRateNotFoundException;
+import exceptions.Service.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,9 +28,12 @@ public class ExchangeRatesServlet extends StartServlet implements AddressReader 
         try {
             response.setStatus(201);
             printResponse(gson.toJson(service.saveToTable(dto)), response);
-        } catch (CurrencyNotFoundException | DbDontWorkException e) {
+        } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException e) {
             response.setStatus(e.getHttpCode());
             printResponse(e.getMessage(), response);
+        } catch (ExchangeRateAlreadyExistException e) {
+            response.setStatus(e.getHttpCode());
+            printResponse(gson.toJson(e.savedExchangeRate), response);
         }
 
     }
