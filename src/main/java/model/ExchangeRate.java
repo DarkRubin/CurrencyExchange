@@ -1,7 +1,7 @@
 package model;
 
 public class ExchangeRate extends Model {
-    private Long id;
+    private final Long id;
     private final Long base;
     private final Long target;
     private final Double rate;

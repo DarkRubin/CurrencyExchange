@@ -21,7 +21,6 @@ public class Exchange {
                 '}';
     }
 
-
     public double getRate() {
         return exchangeRate.getRate();
     }
