@@ -18,20 +18,13 @@ public class CurrencyServlet extends StartServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String code = request.getPathInfo().replace("/", "");
         try {
-            codeIsValid(code);
+            String code = util.getCodeFromPatch(request);
             Currency currency = service.findInTable(code);
             util.printResponseInJSON(currency, response);
         } catch (CurrencyNotFoundException | DbDontWorkException | CodeInvalidException e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
-        }
-    }
-
-    private void codeIsValid(String code) throws CodeInvalidException {
-        if (code == null || code.length() != 3) {
-            throw new CodeInvalidException();
         }
     }
 

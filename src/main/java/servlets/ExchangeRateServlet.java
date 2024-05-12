@@ -22,7 +22,7 @@ public class ExchangeRateServlet extends StartServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            CurrencyPair currencyPair = util.getCurrencyPairFromUrl(request);
+            CurrencyPair currencyPair = util.getCurrencyPairFromPatch(request);
             ExchangeRateDTO toSearch = service.codsToDTO(currencyPair.base(), currencyPair.target(), 0);
             util.printResponseInJSON(service.findInTable(toSearch), response);
         } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
