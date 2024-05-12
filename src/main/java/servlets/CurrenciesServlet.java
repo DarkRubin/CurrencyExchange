@@ -20,7 +20,7 @@ public class CurrenciesServlet extends StartServlet {
 
     private final CurrenciesService service = new CurrenciesService();
 
-    public void isValid(ArrayList<String> fields) throws NeedFieldEmptyException {
+    public void isValid(List<String> fields) throws NeedFieldEmptyException {
         for (String string : fields) {
             if (string.isEmpty()) {
                 throw new NeedFieldEmptyException();
@@ -30,7 +30,7 @@ public class CurrenciesServlet extends StartServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ArrayList<String> fields = new ArrayList<>();
+        List<String> fields = new ArrayList<>();
         fields.add(request.getParameter("name"));
         fields.add(request.getParameter("code"));
         fields.add(request.getParameter("sign"));

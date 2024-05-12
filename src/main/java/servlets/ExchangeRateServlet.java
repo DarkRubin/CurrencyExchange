@@ -1,5 +1,6 @@
 package servlets;
 
+import DTO.CurrencyPair;
 import DTO.ExchangeRateDTO;
 import exceptions.Service.CodePairInvalidException;
 import exceptions.Service.CurrencyNotFoundException;
@@ -13,18 +14,16 @@ import service.ExchangeRatesService;
 import java.io.IOException;
 
 @WebServlet(name = "ExchangeRateServlet", value = "/exchangeRate/*")
-public class ExchangeRateServlet extends StartServlet implements AddressReader {
+public class ExchangeRateServlet extends StartServlet {
 
-    final ExchangeRatesService service = new ExchangeRatesService();
+    private final ExchangeRatesService service = new ExchangeRatesService();
+    private final Util util = new Util();
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            CurrencyPair currencyPair = AddressReader.getCurrencyPair(request);
-            ExchangeRateDTO toSearch = service.codsToDTO(currencyPair.base, currencyPair.target, 0);
+            CurrencyPair currencyPair = util.getCurrencyPairFromUrl(request);
+            ExchangeRateDTO toSearch = service.codsToDTO(currencyPair.base(), currencyPair.target(), 0);
             printResponseInJSON(service.findInTable(toSearch), response);
         } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
                  CodePairInvalidException e) {
