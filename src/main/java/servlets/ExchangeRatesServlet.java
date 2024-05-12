@@ -9,7 +9,6 @@ import model.Currency;
 import service.ExchangeRatesService;
 
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "ExchangeRatesServlet", value = "/exchangeRates/*")
 public class ExchangeRatesServlet extends StartServlet implements AddressReader {
@@ -27,13 +26,13 @@ public class ExchangeRatesServlet extends StartServlet implements AddressReader 
     private void saveAndPrint(HttpServletResponse response, ExchangeRateDTO dto) throws IOException {
         try {
             response.setStatus(201);
-            printResponse(gson.toJson(service.saveToTable(dto)), response);
+            printResponseInJSON(service.saveToTable(dto), response);
         } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException e) {
             response.setStatus(e.getHttpCode());
-            printResponse(e.getMessage(), response);
+            printResponseInJSON(e.getMessage(), response);
         } catch (ExchangeRateAlreadyExistException e) {
             response.setStatus(e.getHttpCode());
-            printResponse(gson.toJson(e.savedExchangeRate), response);
+            printResponseInJSON(e.savedExchangeRate, response);
         }
 
     }
@@ -43,22 +42,20 @@ public class ExchangeRatesServlet extends StartServlet implements AddressReader 
             double rate = Double.parseDouble(request.getParameter("rate"));
             CurrencyPair currencyPair = AddressReader.getCurrencyPair(request);
             ExchangeRateDTO dto = service.codsToDTO(currencyPair.base, currencyPair.target, rate);
-            printResponse(gson.toJson(service.updateInTable(dto)), response);
+            printResponseInJSON(service.updateInTable(dto), response);
         } catch (DbDontWorkException | CurrencyNotFoundException | ExchangeRateNotFoundException |
                  CodePairInvalidException e) {
             response.setStatus(e.getHttpCode());
-            printResponse(e.getMessage(), response);
+            printResponseInJSON(e.getMessage(), response);
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<ExchangeRateDTO> rates;
         try {
-            rates = service.findAllInTable();
-            printResponse(gson.toJson(rates), response);
+            printResponseInJSON(service.findAllInTable(), response);
         } catch (CurrencyNotFoundException | DbDontWorkException e) {
             response.setStatus(e.getHttpCode());
-            printResponse(e.getMessage(), response);
+            printResponseInJSON(e.getMessage(), response);
         }
     }
 }

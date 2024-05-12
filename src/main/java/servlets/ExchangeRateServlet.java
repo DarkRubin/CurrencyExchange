@@ -25,11 +25,11 @@ public class ExchangeRateServlet extends StartServlet implements AddressReader {
         try {
             CurrencyPair currencyPair = AddressReader.getCurrencyPair(request);
             ExchangeRateDTO toSearch = service.codsToDTO(currencyPair.base, currencyPair.target, 0);
-            printResponse(gson.toJson(service.findInTable(toSearch)), response);
+            printResponseInJSON(service.findInTable(toSearch), response);
         } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
                  CodePairInvalidException e) {
             response.setStatus(e.getHttpCode());
-            printResponse(e.getMessage(), response);
+            printResponseInJSON(e.getMessage(), response);
         }
     }
 
