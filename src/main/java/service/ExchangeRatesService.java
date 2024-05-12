@@ -28,7 +28,7 @@ public class ExchangeRatesService {
         }catch (DbObjectNotFoundException e) {
             throw new CurrencyNotFoundException();
         } catch (DbObjectAlreadyAddedException e) {
-            throw new ExchangeRateAlreadyExistException(findInTable(dto));
+            throw new ExchangeRateAlreadyExistException();
         }
     }
 

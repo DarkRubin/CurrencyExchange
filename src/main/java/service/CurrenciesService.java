@@ -16,7 +16,7 @@ public class CurrenciesService {
         try {
             return table.save(currency);
         } catch (DbObjectAlreadyAddedException e) {
-            throw new CurrencyAlreadyExistException(findInTable(currency.getCode()));
+            throw new CurrencyAlreadyExistException();
         }
     }
 

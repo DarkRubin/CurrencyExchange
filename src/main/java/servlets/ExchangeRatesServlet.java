@@ -29,12 +29,10 @@ public class ExchangeRatesServlet extends StartServlet {
         try {
             response.setStatus(201);
             util.printResponseInJSON(service.saveToTable(dto), response);
-        } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException e) {
+        } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
+                 ExchangeRateAlreadyExistException e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
-        } catch (ExchangeRateAlreadyExistException e) {
-            response.setStatus(e.getHttpCode());
-            util.printResponseInJSON(e.savedExchangeRate, response);
         }
 
     }

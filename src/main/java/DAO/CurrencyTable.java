@@ -34,7 +34,7 @@ public class CurrencyTable implements DAO<Currency> {
             return find(currency);
         } catch (SQLException e) {
             if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
-                throw new DbObjectAlreadyAddedException(e);
+                throw new DbObjectAlreadyAddedException();
             }
             throw new DbDontWorkException();
         }
@@ -60,7 +60,6 @@ public class CurrencyTable implements DAO<Currency> {
     @Override
     public Currency find(Currency currency) throws DbDontWorkException, DbObjectNotFoundException {
         try (var connection = connector.getConnection()) {
-
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ? ");
             statement.setString(1, currency.getCode());
             ResultSet resultSet = statement.executeQuery();
@@ -68,7 +67,7 @@ public class CurrencyTable implements DAO<Currency> {
             connection.close();
             return result;
         } catch (DbObjectNotFoundException e) {
-            throw new DbObjectNotFoundException(e);
+            throw new DbObjectNotFoundException();
         } catch (SQLException e) {
             throw new DbDontWorkException();
         }
@@ -109,7 +108,7 @@ public class CurrencyTable implements DAO<Currency> {
     private Currency resultSetToCurrency(ResultSet resultSet) throws SQLException {
         long id = resultSet.getInt("ID");
         if (id == 0) {
-            throw new DbObjectNotFoundException(new SQLException());
+            throw new DbObjectNotFoundException();
         }
         String code = resultSet.getString("Code");
         String fullName = resultSet.getString("FullName");

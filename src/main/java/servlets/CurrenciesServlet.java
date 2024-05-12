@@ -39,12 +39,10 @@ public class CurrenciesServlet extends StartServlet {
             Currency currency = new Currency(fields.get(1), fields.get(0), fields.get(2));
             response.setStatus(201);
             util.printResponseInJSON(service.saveToTable(currency), response);
-        } catch (NeedFieldEmptyException | DbDontWorkException | CurrencyNotFoundException e) {
+        } catch (NeedFieldEmptyException | DbDontWorkException | CurrencyNotFoundException |
+                 CurrencyAlreadyExistException e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
-        } catch (CurrencyAlreadyExistException e) {
-            response.setStatus(e.getHttpCode());
-            util.printResponseInJSON(e.savedCurrency, response);
         }
     }
 

@@ -85,7 +85,7 @@ public class ExchangeTable implements DAO<ExchangeRate> {
             connection.close();
             return result;
         } catch (DbObjectNotFoundException e) {
-            throw new DbObjectNotFoundException(e);
+            throw new DbObjectNotFoundException();
         } catch (SQLException e) {
             throw new DbDontWorkException();
         }
@@ -95,14 +95,14 @@ public class ExchangeTable implements DAO<ExchangeRate> {
         try {
             long id = result.getInt("ID");
             if (id == 0) {
-                throw new DbObjectNotFoundException(new SQLException());
+                throw new DbObjectNotFoundException();
             }
             long baseCurrencyId = result.getInt("BaseCurrencyId");
             long targetCurrencyId = result.getInt("TargetCurrencyId");
             double rate = result.getDouble("Rate");
             return new ExchangeRate(id, baseCurrencyId, targetCurrencyId, rate);
         } catch (DbObjectNotFoundException e) {
-          throw new DbObjectNotFoundException(e);
+          throw new DbObjectNotFoundException();
         } catch (SQLException e) {
             throw new DbDontWorkException();
         }

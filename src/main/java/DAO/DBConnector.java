@@ -23,7 +23,7 @@ public final class DBConnector {
         try {
             return DriverManager.getConnection(URL);
         } catch (SQLException e) {
-            throw new DbConnectException(e);
+            throw new DbConnectException();
         }
     }
 
