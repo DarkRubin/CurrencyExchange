@@ -20,10 +20,10 @@ public class ExchangeServlet extends StartServlet {
         double amount = Double.parseDouble(request.getParameter("amount"));
         try {
             Exchange exchange = service.calculateExchange(from, to, amount);
-            printResponseInJSON(exchange, response);
+            util.printResponseInJSON(exchange, response);
         } catch (ServiceException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         }
     }
 

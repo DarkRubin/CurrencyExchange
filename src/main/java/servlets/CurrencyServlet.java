@@ -22,10 +22,10 @@ public class CurrencyServlet extends StartServlet {
         try {
             codeIsValid(code);
             Currency currency = service.findInTable(code);
-            printResponseInJSON(currency, response);
+            util.printResponseInJSON(currency, response);
         } catch (CurrencyNotFoundException | DbDontWorkException | CodeInvalidException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         }
     }
 

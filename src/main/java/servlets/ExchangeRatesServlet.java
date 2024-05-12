@@ -28,13 +28,13 @@ public class ExchangeRatesServlet extends StartServlet {
     private void saveAndPrint(HttpServletResponse response, ExchangeRateDTO dto) throws IOException {
         try {
             response.setStatus(201);
-            printResponseInJSON(service.saveToTable(dto), response);
+            util.printResponseInJSON(service.saveToTable(dto), response);
         } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         } catch (ExchangeRateAlreadyExistException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.savedExchangeRate, response);
+            util.printResponseInJSON(e.savedExchangeRate, response);
         }
 
     }
@@ -44,20 +44,20 @@ public class ExchangeRatesServlet extends StartServlet {
             double rate = Double.parseDouble(request.getParameter("rate"));
             CurrencyPair currencyPair = util.getCurrencyPairFromUrl(request);
             ExchangeRateDTO dto = service.codsToDTO(currencyPair.base(), currencyPair.target(), rate);
-            printResponseInJSON(service.updateInTable(dto), response);
+            util.printResponseInJSON(service.updateInTable(dto), response);
         } catch (DbDontWorkException | CurrencyNotFoundException | ExchangeRateNotFoundException |
                  CodePairInvalidException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            printResponseInJSON(service.findAllInTable(), response);
+            util.printResponseInJSON(service.findAllInTable(), response);
         } catch (CurrencyNotFoundException | DbDontWorkException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         }
     }
 }

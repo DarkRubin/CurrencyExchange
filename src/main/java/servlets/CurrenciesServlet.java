@@ -38,13 +38,13 @@ public class CurrenciesServlet extends StartServlet {
             isValid(fields);
             Currency currency = new Currency(fields.get(1), fields.get(0), fields.get(2));
             response.setStatus(201);
-            printResponseInJSON(service.saveToTable(currency), response);
+            util.printResponseInJSON(service.saveToTable(currency), response);
         } catch (NeedFieldEmptyException | DbDontWorkException | CurrencyNotFoundException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         } catch (CurrencyAlreadyExistException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.savedCurrency, response);
+            util.printResponseInJSON(e.savedCurrency, response);
         }
     }
 
@@ -53,10 +53,10 @@ public class CurrenciesServlet extends StartServlet {
         try {
             CurrencyTable table = new CurrencyTable();
             List<Currency> currencies = table.findAll();
-            printResponseInJSON(currencies, response);
+            util.printResponseInJSON(currencies, response);
         } catch (DbDontWorkException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         }
     }
 

@@ -24,11 +24,11 @@ public class ExchangeRateServlet extends StartServlet {
         try {
             CurrencyPair currencyPair = util.getCurrencyPairFromUrl(request);
             ExchangeRateDTO toSearch = service.codsToDTO(currencyPair.base(), currencyPair.target(), 0);
-            printResponseInJSON(service.findInTable(toSearch), response);
+            util.printResponseInJSON(service.findInTable(toSearch), response);
         } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
                  CodePairInvalidException e) {
             response.setStatus(e.getHttpCode());
-            printResponseInJSON(e.getMessage(), response);
+            util.printResponseInJSON(e.getMessage(), response);
         }
     }
 
