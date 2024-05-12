@@ -32,7 +32,7 @@ public class ExchangeTable implements DAO<ExchangeRate> {
             return exchangeRate;
         } catch (SQLException e) {
             if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
-                throw new DbObjectAlreadyAddedException(e);
+                throw new DbObjectAlreadyAddedException();
             }
             throw new DbDontWorkException();
         }
