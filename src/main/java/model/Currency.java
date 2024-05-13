@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @ToString
-public class Currency extends Model {
+public class Currency {
     private Long id;
     private final String code;
     private String name;

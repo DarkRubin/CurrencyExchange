@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class ExchangeRate extends Model {
+public class ExchangeRate {
     private final Long id;
     private final Long base;
     private final Long target;

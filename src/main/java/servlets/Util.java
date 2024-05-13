@@ -28,18 +28,18 @@ public class Util {
         String codePair = getUrlArguments(request);
         String base = codePair.substring(0, 3);
         String target = codePair.substring(3);
-        if (!codeIsValid(base) || !codeIsValid(target)) {
-            throw new CodePairInvalidException();
+        if (codeIsValid(base) && codeIsValid(target)) {
+            return new CurrencyPair(base, target);
         }
-        return new CurrencyPair(base, target);
+        throw new CodePairInvalidException();
     }
 
     protected String getCodeFromPatch(HttpServletRequest request) throws CodeInvalidException {
         String code = getUrlArguments(request);
-        if (!codeIsValid(code)) {
-            throw new CodeInvalidException();
+        if (codeIsValid(code)) {
+            return code;
         }
-        return code;
+        throw new CodeInvalidException();
     }
 
     private boolean codeIsValid(String code) {
