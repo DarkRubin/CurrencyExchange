@@ -1,13 +1,11 @@
 package DTO;
 
-public record CurrencyPair(String base, String target) {
-    @Override
-    public String target() {
-        return target;
-    }
+import lombok.AllArgsConstructor;
 
-    @Override
-    public String base() {
-        return base;
-    }
+@AllArgsConstructor
+
+public class CurrencyPair {
+    public String base;
+    public String target;
+
 }

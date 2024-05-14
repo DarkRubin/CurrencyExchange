@@ -16,7 +16,7 @@ public class ExchangeService {
             throws CurrencyNotFoundException, DbDontWorkException, ExchangeRateNotFoundException {
         ExchangeRateDTO rate = exchangeService.codsToDTO(from, to, 0);
         try {
-            ExchangeRateDTO toCalculate = exchangeService.findInTable(rate);
+            ExchangeRateDTO toCalculate = exchangeService.find(rate);
             return calculate(toCalculate, amount);
         } catch (CurrencyNotFoundException | ExchangeRateNotFoundException e) {
             rate.revers();
@@ -50,7 +50,7 @@ public class ExchangeService {
 
     private Exchange calculateReversedExchange(ExchangeRateDTO toCalculate, double amount)
             throws DbDontWorkException, ExchangeRateNotFoundException, CurrencyNotFoundException {
-        ExchangeRateDTO rateDTO = exchangeService.findInTable(toCalculate);
+        ExchangeRateDTO rateDTO = exchangeService.find(toCalculate);
         Double reversedRate = rateDTO.getRate();
         double trueRate = Math.pow(reversedRate, -1);
         toCalculate.revers();

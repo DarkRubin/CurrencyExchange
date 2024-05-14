@@ -20,14 +20,6 @@ public class CurrenciesServlet extends StartServlet {
 
     private final CurrenciesService service = new CurrenciesService();
 
-    public void isValid(List<String> fields) throws NeedFieldEmptyException {
-        for (String string : fields) {
-            if (string.isEmpty()) {
-                throw new NeedFieldEmptyException();
-            }
-        }
-    }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<String> fields = new ArrayList<>();
@@ -35,10 +27,10 @@ public class CurrenciesServlet extends StartServlet {
         fields.add(request.getParameter("code"));
         fields.add(request.getParameter("sign"));
         try {
-            isValid(fields);
+            util.isNotEmpty(fields);
             Currency currency = new Currency(fields.get(1), fields.get(0), fields.get(2));
             response.setStatus(201);
-            util.printResponseInJSON(service.saveToTable(currency), response);
+            util.printResponseInJSON(service.save(currency), response);
         } catch (NeedFieldEmptyException | DbDontWorkException | CurrencyNotFoundException |
                  CurrencyAlreadyExistException e) {
             response.setStatus(e.getHttpCode());

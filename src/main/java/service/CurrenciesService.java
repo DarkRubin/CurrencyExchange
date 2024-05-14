@@ -12,7 +12,7 @@ import model.Currency;
 public class CurrenciesService {
     private final CurrencyTable table = new CurrencyTable();
 
-    public Currency saveToTable(Currency currency) throws DbDontWorkException, CurrencyAlreadyExistException, CurrencyNotFoundException {
+    public Currency save(Currency currency) throws DbDontWorkException, CurrencyAlreadyExistException, CurrencyNotFoundException {
         try {
             return table.save(currency);
         } catch (DbObjectAlreadyAddedException e) {
@@ -20,7 +20,7 @@ public class CurrenciesService {
         }
     }
 
-    public Currency findInTable(String code) throws CurrencyNotFoundException, DbDontWorkException {
+    public Currency find(String code) throws CurrencyNotFoundException, DbDontWorkException {
         try {
             return table.find(new Currency(code));
         } catch (DbObjectNotFoundException e) {

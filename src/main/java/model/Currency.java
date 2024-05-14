@@ -12,12 +12,12 @@ import lombok.ToString;
 public class Currency {
     private Long id;
     private final String code;
-    private String name;
+    private String fullName;
     private String sign;
 
-    public Currency(String code, String name, String sign) {
+    public Currency(String code, String fullName, String sign) {
         this.code = code;
-        this.name = name;
+        this.fullName = fullName;
         this.sign = sign;
     }
 }

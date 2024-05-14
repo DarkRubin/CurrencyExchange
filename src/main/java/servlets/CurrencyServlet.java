@@ -20,7 +20,7 @@ public class CurrencyServlet extends StartServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String code = util.getCodeFromPatch(request);
-            Currency currency = service.findInTable(code);
+            Currency currency = service.find(code);
             util.printResponseInJSON(currency, response);
         } catch (CurrencyNotFoundException | DbDontWorkException | CodeInvalidException e) {
             response.setStatus(e.getHttpCode());

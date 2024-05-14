@@ -27,7 +27,7 @@ public class CurrencyTable implements DAO<Currency> {
             PreparedStatement statement = connection.
                     prepareStatement("INSERT INTO Currencies (Code, FullName, Sign) VALUES (?, ?, ?);");
             statement.setString(1, currency.getCode());
-            statement.setString(2, currency.getName());
+            statement.setString(2, currency.getFullName());
             statement.setString(3, currency.getSign());
             statement.execute();
             connection.close();
@@ -46,7 +46,7 @@ public class CurrencyTable implements DAO<Currency> {
             connection = connector.getConnection();
             PreparedStatement statement = connection.
                     prepareStatement("UPDATE Currencies SET FullName = ?, Sign = ? WHERE Code = ?;");
-            statement.setString(1, currency.getName());
+            statement.setString(1, currency.getFullName());
             statement.setString(2, currency.getSign());
             statement.setString(3, currency.getCode());
             statement.execute();
