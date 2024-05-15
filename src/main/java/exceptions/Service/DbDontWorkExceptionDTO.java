@@ -1,8 +1,10 @@
 package exceptions.Service;
 
-public class DbDontWorkException extends ServiceException {
+import DTO.ExceptionDTO;
 
-    public DbDontWorkException() {
+public class DbDontWorkExceptionDTO extends ExceptionDTO {
+
+    public DbDontWorkExceptionDTO() {
         super.MESSAGE = "База данных не работает";
         super.HTTP_CODE = 500;
     }

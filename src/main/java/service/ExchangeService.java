@@ -1,10 +1,10 @@
 package service;
 
+import DTO.ExceptionDTO;
 import DTO.ExchangeRateDTO;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
-import exceptions.Service.ExchangeRateNotFoundException;
-import exceptions.Service.ServiceException;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
+import exceptions.Service.ExchangeRateNotFoundExceptionDTO;
 import model.Currency;
 import model.Exchange;
 
@@ -16,7 +16,7 @@ public class ExchangeService {
 
     private final ExchangeRatesService exchangeService = new ExchangeRatesService();
 
-    public Exchange calculateExchange(String from, String to, double amount) throws CurrencyNotFoundException, DbDontWorkException, ExchangeRateNotFoundException {
+    public Exchange calculateExchange(String from, String to, double amount) throws CurrencyNotFoundExceptionDTO, DbDontWorkExceptionDTO, ExchangeRateNotFoundExceptionDTO {
         ExchangeRateDTO toCalculate = exchangeService.codsToDTO(from, to, 0);
         Optional<Exchange> exchange = calculateDefault(toCalculate, amount);
         if (exchange.isEmpty()) {
@@ -24,7 +24,7 @@ public class ExchangeService {
         }
         if (exchange.isEmpty()) {
             if (from.equals("USD") || to.equals("USD")) {
-                throw new ExchangeRateNotFoundException();
+                throw new ExchangeRateNotFoundExceptionDTO();
             } else {
                 return (calculateByUSD(toCalculate, amount));
             }
@@ -36,7 +36,7 @@ public class ExchangeService {
     private Optional<Exchange> calculateDefault(ExchangeRateDTO toCalculate, double amount) {
         try {
             return Optional.of(calculate(exchangeService.find(toCalculate), amount));
-        } catch (ServiceException ignored) {
+        } catch (ExceptionDTO ignored) {
             return Optional.empty();
         }
     }
@@ -65,7 +65,7 @@ public class ExchangeService {
             toCalculate.revers();
             toCalculate.setRate(trueRate);
             return Optional.of(calculate(toCalculate, amount));
-        } catch (ServiceException ignore) {
+        } catch (ExceptionDTO ignore) {
             return Optional.empty();
         }
     }

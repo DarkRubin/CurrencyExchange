@@ -29,8 +29,8 @@ public class ExchangeRatesServlet extends StartServlet {
         try {
             response.setStatus(201);
             util.printResponseInJSON(service.save(dto), response);
-        } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
-                 ExchangeRateAlreadyExistException e) {
+        } catch (CurrencyNotFoundExceptionDTO | DbDontWorkExceptionDTO | ExchangeRateNotFoundExceptionDTO |
+                 ExchangeRateAlreadyExistExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }
@@ -43,8 +43,8 @@ public class ExchangeRatesServlet extends StartServlet {
             CurrencyPair currencyPair = util.getCurrencyPairFromPatch(request);
             ExchangeRateDTO dto = service.codsToDTO(currencyPair.base, currencyPair.target, rate);
             util.printResponseInJSON(service.update(dto), response);
-        } catch (DbDontWorkException | CurrencyNotFoundException | ExchangeRateNotFoundException |
-                 CodePairInvalidException e) {
+        } catch (DbDontWorkExceptionDTO | CurrencyNotFoundExceptionDTO | ExchangeRateNotFoundExceptionDTO |
+                 CodePairInvalidExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }
@@ -53,7 +53,7 @@ public class ExchangeRatesServlet extends StartServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             util.printResponseInJSON(service.find(), response);
-        } catch (CurrencyNotFoundException | DbDontWorkException e) {
+        } catch (CurrencyNotFoundExceptionDTO | DbDontWorkExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }

@@ -1,10 +1,10 @@
 package servlets;
 
 import DAO.CurrencyTable;
-import exceptions.Service.CurrencyAlreadyExistException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
-import exceptions.Service.NeedFieldEmptyException;
+import exceptions.Service.CurrencyAlreadyExistExceptionDTO;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
+import exceptions.Service.NeedFieldEmptyExceptionDTO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,8 +31,8 @@ public class CurrenciesServlet extends StartServlet {
             Currency currency = new Currency(fields.get(1), fields.get(0), fields.get(2));
             response.setStatus(201);
             util.printResponseInJSON(service.save(currency), response);
-        } catch (NeedFieldEmptyException | DbDontWorkException | CurrencyNotFoundException |
-                 CurrencyAlreadyExistException e) {
+        } catch (NeedFieldEmptyExceptionDTO | DbDontWorkExceptionDTO | CurrencyNotFoundExceptionDTO |
+                 CurrencyAlreadyExistExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }
@@ -44,7 +44,7 @@ public class CurrenciesServlet extends StartServlet {
             CurrencyTable table = new CurrencyTable();
             List<Currency> currencies = table.findAll();
             util.printResponseInJSON(currencies, response);
-        } catch (DbDontWorkException e) {
+        } catch (DbDontWorkExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }

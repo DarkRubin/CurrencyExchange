@@ -1,8 +1,8 @@
 package servlets;
 
-import exceptions.Service.CodeInvalidException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
+import exceptions.Service.CodeInvalidExceptionDTO;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ public class CurrencyServlet extends StartServlet {
             String code = util.getCodeFromPatch(request);
             Currency currency = service.find(code);
             util.printResponseInJSON(currency, response);
-        } catch (CurrencyNotFoundException | DbDontWorkException | CodeInvalidException e) {
+        } catch (CurrencyNotFoundExceptionDTO | DbDontWorkExceptionDTO | CodeInvalidExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }

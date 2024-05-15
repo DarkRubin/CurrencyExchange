@@ -1,4 +1,12 @@
 package exceptions.DB;
 
 
-public class DbConnectException extends DbException {}
+import DTO.ExceptionDTO;
+
+public class DbConnectException extends ExceptionDTO {
+
+    public DbConnectException() {
+        super.MESSAGE = "Нет подключения к базе данных";
+        super.HTTP_CODE = 500;
+    }
+}

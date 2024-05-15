@@ -1,6 +1,6 @@
-package exceptions.Service;
+package DTO;
 
-public abstract class ServiceException extends RuntimeException {
+public abstract class ExceptionDTO extends RuntimeException {
 
     protected String MESSAGE;
     protected int HTTP_CODE;

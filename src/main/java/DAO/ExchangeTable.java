@@ -2,7 +2,7 @@ package DAO;
 
 import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
-import exceptions.Service.DbDontWorkException;
+import exceptions.Service.DbDontWorkExceptionDTO;
 import model.ExchangeRate;
 
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ public class ExchangeTable {
 
     private final DBConnector connector = new DBConnector();
 
-    public ExchangeRate save(ExchangeRate exchangeRate) throws DbDontWorkException, DbObjectAlreadyAddedException {
+    public ExchangeRate save(ExchangeRate exchangeRate) throws DbDontWorkExceptionDTO, DbObjectAlreadyAddedException {
         try (var connection = connector.getConnection()) {
             PreparedStatement preparedStatement = connection.
                 prepareStatement("INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate) VALUES (?, ?, ?);");
@@ -29,12 +29,12 @@ public class ExchangeTable {
             if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
                 throw new DbObjectAlreadyAddedException();
             }
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
 
     }
 
-    public ExchangeRate update(ExchangeRate exchangeRate) throws DbDontWorkException {
+    public ExchangeRate update(ExchangeRate exchangeRate) throws DbDontWorkExceptionDTO {
         try (var connection = connector.getConnection()) {
             PreparedStatement preparedStatement = connection.
                     prepareStatement("UPDATE ExchangeRates SET Rate = ? WHERE BaseCurrencyId = ? AND TargetCurrencyId = ?");
@@ -45,11 +45,11 @@ public class ExchangeTable {
             connection.close();
             return find(exchangeRate);
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 
-    public List<ExchangeRate> findAll() throws DbDontWorkException {
+    public List<ExchangeRate> findAll() throws DbDontWorkExceptionDTO {
         List<ExchangeRate> exchanges = new ArrayList<>();
         try (var connection = connector.getConnection()) {
             ResultSet allExchangeRates = connection.createStatement().executeQuery("SELECT * FROM ExchangeRates;");
@@ -57,12 +57,12 @@ public class ExchangeTable {
                 exchanges.add(resultSetToExchangeRate(allExchangeRates));
             }
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
         return exchanges;
     }
 
-    public ExchangeRate find(ExchangeRate exchangeRate) throws DbObjectNotFoundException, DbDontWorkException {
+    public ExchangeRate find(ExchangeRate exchangeRate) throws DbObjectNotFoundException, DbDontWorkExceptionDTO {
         try (var connection = connector.getConnection()) {
             PreparedStatement statement = connection.
                 prepareStatement("SELECT * FROM ExchangeRates WHERE BaseCurrencyId = ? AND TargetCurrencyId = ?");
@@ -75,11 +75,11 @@ public class ExchangeTable {
         } catch (DbObjectNotFoundException e) {
             throw new DbObjectNotFoundException();
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 
-    private ExchangeRate resultSetToExchangeRate(ResultSet result) throws DbObjectNotFoundException, DbDontWorkException {
+    private ExchangeRate resultSetToExchangeRate(ResultSet result) throws DbObjectNotFoundException, DbDontWorkExceptionDTO {
         try {
             long id = result.getInt("ID");
             if (id == 0) {
@@ -92,7 +92,7 @@ public class ExchangeTable {
         } catch (DbObjectNotFoundException e) {
           throw new DbObjectNotFoundException();
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 }

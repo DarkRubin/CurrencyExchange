@@ -1,8 +1,10 @@
 package exceptions.Service;
 
-public class CodePairInvalidException extends ServiceException {
+import DTO.ExceptionDTO;
 
-    public CodePairInvalidException() {
+public class CodePairInvalidExceptionDTO extends ExceptionDTO {
+
+    public CodePairInvalidExceptionDTO() {
         MESSAGE = "Коды валют пары отсутствуют в адресе";
         HTTP_CODE = 400;
     }

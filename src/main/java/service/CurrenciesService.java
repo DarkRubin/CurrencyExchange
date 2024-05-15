@@ -3,28 +3,28 @@ package service;
 import DAO.CurrencyTable;
 import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
-import exceptions.Service.CurrencyAlreadyExistException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
+import exceptions.Service.CurrencyAlreadyExistExceptionDTO;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
 import model.Currency;
 
 
 public class CurrenciesService {
     private final CurrencyTable table = new CurrencyTable();
 
-    public Currency save(Currency currency) throws DbDontWorkException, CurrencyAlreadyExistException, CurrencyNotFoundException {
+    public Currency save(Currency currency) throws DbDontWorkExceptionDTO, CurrencyAlreadyExistExceptionDTO, CurrencyNotFoundExceptionDTO {
         try {
             return table.save(currency);
         } catch (DbObjectAlreadyAddedException e) {
-            throw new CurrencyAlreadyExistException();
+            throw new CurrencyAlreadyExistExceptionDTO();
         }
     }
 
-    public Currency find(String code) throws CurrencyNotFoundException, DbDontWorkException {
+    public Currency find(String code) throws CurrencyNotFoundExceptionDTO, DbDontWorkExceptionDTO {
         try {
             return table.find(new Currency(code));
         } catch (DbObjectNotFoundException e) {
-            throw new CurrencyNotFoundException();
+            throw new CurrencyNotFoundExceptionDTO();
         }
     }
 

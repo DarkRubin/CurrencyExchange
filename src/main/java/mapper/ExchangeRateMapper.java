@@ -3,8 +3,8 @@ package mapper;
 import DAO.CurrencyTable;
 import DTO.ExchangeRateDTO;
 import exceptions.DB.DbObjectNotFoundException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
 import model.ExchangeRate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,9 +18,9 @@ public interface ExchangeRateMapper {
 
     @Mapping(target = "baseCurrency", expression = "java(converter.findById(exchangeRate.base()))")
     @Mapping(target = "targetCurrency", expression = "java(converter.findById(exchangeRate.target()))")
-    ExchangeRateDTO toDTO(ExchangeRate exchangeRate, CurrencyTable converter) throws DbDontWorkException, CurrencyNotFoundException;
+    ExchangeRateDTO toDTO(ExchangeRate exchangeRate, CurrencyTable converter) throws DbDontWorkExceptionDTO, CurrencyNotFoundExceptionDTO;
 
     @Mapping(target = "base", expression = "java(converter.find(dto.getBaseCurrency()).getId())")
     @Mapping(target = "target", expression = "java(converter.find(dto.getTargetCurrency()).getId())")
-    ExchangeRate fromDTO(ExchangeRateDTO dto, CurrencyTable converter) throws DbDontWorkException, DbObjectNotFoundException;
+    ExchangeRate fromDTO(ExchangeRateDTO dto, CurrencyTable converter) throws DbDontWorkExceptionDTO, DbObjectNotFoundException;
 }

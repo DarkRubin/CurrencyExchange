@@ -3,6 +3,7 @@ package DAO;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import exceptions.DB.DbConnectException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public final class DBConnector {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new DbConnectException();
         }
         config.setJdbcUrl(URL);
         ds = new HikariDataSource(config);

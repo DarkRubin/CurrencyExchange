@@ -5,10 +5,10 @@ import DAO.ExchangeTable;
 import DTO.ExchangeRateDTO;
 import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
-import exceptions.Service.ExchangeRateAlreadyExistException;
-import exceptions.Service.ExchangeRateNotFoundException;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
+import exceptions.Service.ExchangeRateAlreadyExistExceptionDTO;
+import exceptions.Service.ExchangeRateNotFoundExceptionDTO;
 import model.Currency;
 import model.ExchangeRate;
 
@@ -24,31 +24,31 @@ public class ExchangeRatesService {
     CurrencyTable converter = new CurrencyTable();
 
     public ExchangeRateDTO save(ExchangeRateDTO dto)
-            throws CurrencyNotFoundException, DbDontWorkException, ExchangeRateNotFoundException, ExchangeRateAlreadyExistException {
+            throws CurrencyNotFoundExceptionDTO, DbDontWorkExceptionDTO, ExchangeRateNotFoundExceptionDTO, ExchangeRateAlreadyExistExceptionDTO {
         try {
             ExchangeRate exchangeRate = fromDTO(dto);
             return toDTO(table.save(exchangeRate));
         }catch (DbObjectNotFoundException e) {
-            throw new CurrencyNotFoundException();
+            throw new CurrencyNotFoundExceptionDTO();
         } catch (DbObjectAlreadyAddedException e) {
-            throw new ExchangeRateAlreadyExistException();
+            throw new ExchangeRateAlreadyExistExceptionDTO();
         }
     }
 
-    public ExchangeRateDTO find(ExchangeRateDTO exchangeRate) throws DbDontWorkException, ExchangeRateNotFoundException, CurrencyNotFoundException {
+    public ExchangeRateDTO find(ExchangeRateDTO exchangeRate) throws DbDontWorkExceptionDTO, ExchangeRateNotFoundExceptionDTO, CurrencyNotFoundExceptionDTO {
         try {
             ExchangeRate rate = table.find(fromDTO(exchangeRate));
             return toDTO(rate);
         } catch (DbObjectNotFoundException e) {
-            throw new ExchangeRateNotFoundException();
+            throw new ExchangeRateNotFoundExceptionDTO();
         }
     }
-    public ExchangeRateDTO update(ExchangeRateDTO exchangeRate) throws DbDontWorkException, CurrencyNotFoundException, ExchangeRateNotFoundException {
+    public ExchangeRateDTO update(ExchangeRateDTO exchangeRate) throws DbDontWorkExceptionDTO, CurrencyNotFoundExceptionDTO, ExchangeRateNotFoundExceptionDTO {
         try {
             ExchangeRate rate = fromDTO(exchangeRate);
             return toDTO(table.update(rate));
         } catch (DbObjectNotFoundException e) {
-            throw new ExchangeRateNotFoundException();
+            throw new ExchangeRateNotFoundExceptionDTO();
         }
     }
 
@@ -56,7 +56,7 @@ public class ExchangeRatesService {
          return new ExchangeRateDTO(new Currency(baseCurrencyCode), new Currency(targetCurrencyCode), rate);
     }
 
-    public List<ExchangeRateDTO> find() throws CurrencyNotFoundException, DbDontWorkException {
+    public List<ExchangeRateDTO> find() throws CurrencyNotFoundExceptionDTO, DbDontWorkExceptionDTO {
         List<ExchangeRateDTO> dtoList = new ArrayList<>();
         List<ExchangeRate> list = table.findAll();
         for (ExchangeRate rate : list) {
@@ -65,11 +65,11 @@ public class ExchangeRatesService {
         return dtoList;
     }
 
-    private ExchangeRateDTO toDTO(ExchangeRate rate) throws DbDontWorkException, CurrencyNotFoundException {
+    private ExchangeRateDTO toDTO(ExchangeRate rate) throws DbDontWorkExceptionDTO, CurrencyNotFoundExceptionDTO {
         return EXCHANGE_RATE_MAPPER.toDTO(table.update(rate), converter);
     }
 
-    private ExchangeRate fromDTO(ExchangeRateDTO rateDTO) throws DbDontWorkException {
+    private ExchangeRate fromDTO(ExchangeRateDTO rateDTO) throws DbDontWorkExceptionDTO {
         return EXCHANGE_RATE_MAPPER.fromDTO(rateDTO, converter);
     }
 }

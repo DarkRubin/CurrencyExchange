@@ -2,10 +2,10 @@ package servlets;
 
 import DTO.CurrencyPair;
 import DTO.ExchangeRateDTO;
-import exceptions.Service.CodePairInvalidException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
-import exceptions.Service.ExchangeRateNotFoundException;
+import exceptions.Service.CodePairInvalidExceptionDTO;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
+import exceptions.Service.ExchangeRateNotFoundExceptionDTO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,8 +25,8 @@ public class ExchangeRateServlet extends StartServlet {
             CurrencyPair currencyPair = util.getCurrencyPairFromPatch(request);
             ExchangeRateDTO toSearch = service.codsToDTO(currencyPair.base, currencyPair.target, 0);
             util.printResponseInJSON(service.find(toSearch), response);
-        } catch (CurrencyNotFoundException | DbDontWorkException | ExchangeRateNotFoundException |
-                 CodePairInvalidException e) {
+        } catch (CurrencyNotFoundExceptionDTO | DbDontWorkExceptionDTO | ExchangeRateNotFoundExceptionDTO |
+                 CodePairInvalidExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }

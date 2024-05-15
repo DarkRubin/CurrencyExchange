@@ -1,8 +1,10 @@
 package exceptions.Service;
 
-public class CodeInvalidException extends ServiceException {
+import DTO.ExceptionDTO;
 
-    public CodeInvalidException() {
+public class CodeInvalidExceptionDTO extends ExceptionDTO {
+
+    public CodeInvalidExceptionDTO() {
         super.MESSAGE = "Код валюты отсутствует в адресе";
         super.HTTP_CODE = 400;
     }

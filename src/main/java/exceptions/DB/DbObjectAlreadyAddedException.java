@@ -1,6 +1,12 @@
 package exceptions.DB;
 
 
-public class DbObjectAlreadyAddedException extends DbException{
+import DTO.ExceptionDTO;
 
+public class DbObjectAlreadyAddedException extends ExceptionDTO {
+
+    public DbObjectAlreadyAddedException() {
+        super.MESSAGE = "Объект уже существует в базе";
+        super.HTTP_CODE = 500;
+    }
 }

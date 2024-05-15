@@ -1,7 +1,7 @@
 package servlets;
 
+import DTO.ExceptionDTO;
 import DTO.ExchangeDTO;
-import exceptions.Service.ServiceException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class ExchangeServlet extends StartServlet {
             Exchange exchange = service.calculateExchange(from, to, amount);
             ExchangeDTO exchangeDTO = EXCHANGE_MAPPER.toDTO(exchange);
             util.printResponseInJSON(exchangeDTO, response);
-        } catch (ServiceException e) {
+        } catch (ExceptionDTO e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);
         }

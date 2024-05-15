@@ -1,9 +1,11 @@
 package exceptions.Service;
 
 
-public class ExchangeRateAlreadyExistException extends ServiceException {
+import DTO.ExceptionDTO;
 
-    public ExchangeRateAlreadyExistException() {
+public class ExchangeRateAlreadyExistExceptionDTO extends ExceptionDTO {
+
+    public ExchangeRateAlreadyExistExceptionDTO() {
         MESSAGE = "Валютная пара с таким кодом уже существует";
         HTTP_CODE = 409;
     }

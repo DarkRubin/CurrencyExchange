@@ -1,8 +1,10 @@
 package exceptions.Service;
 
-public class CurrencyAlreadyExistException extends ServiceException{
+import DTO.ExceptionDTO;
 
-    public CurrencyAlreadyExistException() {
+public class CurrencyAlreadyExistExceptionDTO extends ExceptionDTO {
+
+    public CurrencyAlreadyExistExceptionDTO() {
         MESSAGE = "Валюта с таким кодом уже существует";
         HTTP_CODE = 409;
     }

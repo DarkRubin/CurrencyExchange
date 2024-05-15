@@ -1,8 +1,10 @@
 package exceptions.Service;
 
-public class NeedFieldEmptyException extends ServiceException {
+import DTO.ExceptionDTO;
 
-    public NeedFieldEmptyException() {
+public class NeedFieldEmptyExceptionDTO extends ExceptionDTO {
+
+    public NeedFieldEmptyExceptionDTO() {
         MESSAGE = "Отсутствует нужное поле формы";
         HTTP_CODE = 400;
     }

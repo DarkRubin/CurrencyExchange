@@ -3,8 +3,8 @@ package DAO;
 
 import exceptions.DB.DbObjectAlreadyAddedException;
 import exceptions.DB.DbObjectNotFoundException;
-import exceptions.Service.CurrencyNotFoundException;
-import exceptions.Service.DbDontWorkException;
+import exceptions.Service.CurrencyNotFoundExceptionDTO;
+import exceptions.Service.DbDontWorkExceptionDTO;
 import model.Currency;
 
 import java.sql.PreparedStatement;
@@ -18,7 +18,7 @@ public class CurrencyTable {
 
     private final DBConnector connector = new DBConnector();
 
-    public Currency save(Currency currency) throws DbDontWorkException, DbObjectAlreadyAddedException {
+    public Currency save(Currency currency) throws DbDontWorkExceptionDTO, DbObjectAlreadyAddedException {
         try (var connection = connector.getConnection()) {
             PreparedStatement statement = connection.
                     prepareStatement("INSERT INTO Currencies (Code, FullName, Sign) VALUES (?, ?, ?);");
@@ -31,11 +31,11 @@ public class CurrencyTable {
             if (e.getMessage().contains("SQLITE_CONSTRAINT_UNIQUE")) {
                 throw new DbObjectAlreadyAddedException();
             }
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 
-    public Currency find(Currency currency) throws DbDontWorkException, DbObjectNotFoundException {
+    public Currency find(Currency currency) throws DbDontWorkExceptionDTO, DbObjectNotFoundException {
         try (var connection = connector.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Currencies WHERE Code = ? ");
             statement.setString(1, currency.getCode());
@@ -44,24 +44,24 @@ public class CurrencyTable {
         } catch (DbObjectNotFoundException e) {
             throw new DbObjectNotFoundException();
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 
-    public Currency findById(long id) throws DbDontWorkException, CurrencyNotFoundException {
+    public Currency findById(long id) throws DbDontWorkExceptionDTO, CurrencyNotFoundExceptionDTO {
         try (var connection = connector.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Currencies WHERE ID = ?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             return resultSetToCurrency(resultSet);
         } catch (DbObjectNotFoundException e) {
-            throw new CurrencyNotFoundException();
+            throw new CurrencyNotFoundExceptionDTO();
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 
-    public List<Currency> findAll() throws DbDontWorkException {
+    public List<Currency> findAll() throws DbDontWorkExceptionDTO {
         try (var connection = connector.getConnection()) {
             ResultSet allCurrencies = connection.createStatement().executeQuery("SELECT * FROM Currencies;");
             List<Currency> currencies = new ArrayList<>();
@@ -70,7 +70,7 @@ public class CurrencyTable {
             }
             return currencies;
         } catch (SQLException e) {
-            throw new DbDontWorkException();
+            throw new DbDontWorkExceptionDTO();
         }
     }
 
