@@ -1,13 +1,16 @@
 package DAO;
 
 
-import exceptions.DB.DbConnectException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class DBConnector {
+
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource ds;
 
     private static final String URL = "jdbc:sqlite:E:/DEV/Projects/CurrencyExchange/src/main/resources/exchangeDB.sqlite";
 
@@ -17,15 +20,15 @@ public final class DBConnector {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+        config.setJdbcUrl(URL);
+        ds = new HikariDataSource(config);
     }
 
-    Connection getConnection() throws DbConnectException {
-        try {
-            return DriverManager.getConnection(URL);
-        } catch (SQLException e) {
-            throw new DbConnectException();
-        }
+    Connection getConnection() throws SQLException {
+        return ds.getConnection();
     }
+
+
 
 
 
