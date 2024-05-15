@@ -19,4 +19,4 @@ POST http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchangeRates?baseCurre
 PATCH http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchangeRates/USDEUR?rate=0.97
 
 ###
-GET http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchange?from=UAH&to=EUR&amount=39
+GET http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchange?from=AUD&to=EUR&amount=39.5554355508520890282
