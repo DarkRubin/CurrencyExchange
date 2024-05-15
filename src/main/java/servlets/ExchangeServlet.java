@@ -1,13 +1,16 @@
 package servlets;
 
-import DTO.Exchange;
+import DTO.ExchangeDTO;
 import exceptions.Service.ServiceException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Exchange;
 import service.ExchangeService;
 
 import java.io.IOException;
+
+import static mapper.ExchangeMapper.EXCHANGE_MAPPER;
 
 @WebServlet(name = "ExchangeServlet", value = "/exchange/*")
 public class ExchangeServlet extends StartServlet {
@@ -20,7 +23,8 @@ public class ExchangeServlet extends StartServlet {
         double amount = Double.parseDouble(request.getParameter("amount"));
         try {
             Exchange exchange = service.calculateExchange(from, to, amount);
-            util.printResponseInJSON(exchange, response);
+            ExchangeDTO exchangeDTO = EXCHANGE_MAPPER.toDTO(exchange);
+            util.printResponseInJSON(exchangeDTO, response);
         } catch (ServiceException e) {
             response.setStatus(e.getHttpCode());
             util.printResponseInJSON(e.getMessage(), response);

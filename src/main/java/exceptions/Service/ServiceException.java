@@ -1,6 +1,6 @@
 package exceptions.Service;
 
-public abstract class ServiceException extends Exception {
+public abstract class ServiceException extends RuntimeException {
 
     protected String MESSAGE;
     protected int HTTP_CODE;
