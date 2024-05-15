@@ -16,7 +16,7 @@ GET http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchangeRate/USDEUR
 POST http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchangeRates?baseCurrencyCode=USD&targetCurrencyCode=EUR&rate=0.99
 
 ###
-PATCH http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchangeRates/USDEUR?rate=0.96
+PATCH http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchangeRates/USDEUR?rate=0.97
 
 ###
 GET http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/exchange?from=USD&to=AUD&amount=10

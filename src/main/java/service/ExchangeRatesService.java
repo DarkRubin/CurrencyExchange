@@ -15,16 +15,19 @@ import model.ExchangeRate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static mapper.ExchangeRateMapper.EXCHANGE_RATE_MAPPER;
+
+
 public class ExchangeRatesService {
 
     private final ExchangeTable table = new ExchangeTable();
-    private final CurrencyTable converter = new CurrencyTable();
+    CurrencyTable converter = new CurrencyTable();
 
     public ExchangeRateDTO save(ExchangeRateDTO dto)
             throws CurrencyNotFoundException, DbDontWorkException, ExchangeRateNotFoundException, ExchangeRateAlreadyExistException {
         try {
-            ExchangeRate exchangeRate = convertDTOtoModel(dto);
-            return convertModelToDTO(table.save(exchangeRate));
+            ExchangeRate exchangeRate = fromDTO(dto);
+            return toDTO(table.save(exchangeRate));
         }catch (DbObjectNotFoundException e) {
             throw new CurrencyNotFoundException();
         } catch (DbObjectAlreadyAddedException e) {
@@ -34,16 +37,16 @@ public class ExchangeRatesService {
 
     public ExchangeRateDTO find(ExchangeRateDTO exchangeRate) throws DbDontWorkException, ExchangeRateNotFoundException, CurrencyNotFoundException {
         try {
-            ExchangeRate rate = table.find(convertDTOtoModel(exchangeRate));
-            return convertModelToDTO(rate);
+            ExchangeRate rate = table.find(fromDTO(exchangeRate));
+            return toDTO(rate);
         } catch (DbObjectNotFoundException e) {
             throw new ExchangeRateNotFoundException();
         }
     }
     public ExchangeRateDTO update(ExchangeRateDTO exchangeRate) throws DbDontWorkException, CurrencyNotFoundException, ExchangeRateNotFoundException {
         try {
-            ExchangeRate rate = convertDTOtoModel(exchangeRate);
-            return convertModelToDTO(table.update(rate));
+            ExchangeRate rate = fromDTO(exchangeRate);
+            return toDTO(table.update(rate));
         } catch (DbObjectNotFoundException e) {
             throw new ExchangeRateNotFoundException();
         }
@@ -57,23 +60,16 @@ public class ExchangeRatesService {
         List<ExchangeRateDTO> dtoList = new ArrayList<>();
         List<ExchangeRate> list = table.findAll();
         for (ExchangeRate rate : list) {
-            dtoList.add(convertModelToDTO(rate));
+            dtoList.add(toDTO(rate));
         }
         return dtoList;
     }
 
-    private ExchangeRate convertDTOtoModel(ExchangeRateDTO dto) throws DbDontWorkException, DbObjectNotFoundException {
-        Currency base = converter.find(dto.getBaseCurrency());
-        Long baseId = base.getId();
-        Currency target = converter.find(dto.getTargetCurrency());
-        Long targetId = target.getId();
-        return new ExchangeRate(null, baseId, targetId, dto.getRate());
+    private ExchangeRateDTO toDTO(ExchangeRate rate) throws DbDontWorkException, CurrencyNotFoundException {
+        return EXCHANGE_RATE_MAPPER.toDTO(table.update(rate), converter);
     }
 
-    private ExchangeRateDTO convertModelToDTO(ExchangeRate exchangeRate) throws DbDontWorkException, CurrencyNotFoundException {
-        Long id = exchangeRate.getId();
-        Currency base = converter.findById(exchangeRate.getBase());
-        Currency target = converter.findById(exchangeRate.getTarget());
-        return new ExchangeRateDTO(id, base, target, exchangeRate.getRate());
+    private ExchangeRate fromDTO(ExchangeRateDTO rateDTO) throws DbDontWorkException {
+        return EXCHANGE_RATE_MAPPER.fromDTO(rateDTO, converter);
     }
 }

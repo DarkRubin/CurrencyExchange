@@ -1,10 +1,12 @@
 package DTO;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import model.Currency;
+
 @Getter
 @Setter
 @ToString
@@ -16,6 +18,8 @@ public class ExchangeRateDTO {
     private Currency targetCurrency;
     private Double rate;
 
+    public ExchangeRateDTO() {
+    }
 
     public ExchangeRateDTO(Currency baseCurrency, Currency targetCurrency, Double rate) {
         this.baseCurrency = baseCurrency;
